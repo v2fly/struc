@@ -156,6 +156,14 @@ func (f Fields) Unpack(r io.Reader, val reflect.Value, options *Options) error {
 				if err := v.Addr().Interface().(Custom).Unpack(r, length, options); err != nil {
 					return err
 				}
+			} else if typ == CustomTypePointer {
+				if err := reflect.Indirect(v.Addr()).Interface().(Custom).Unpack(r, length, options); err != nil {
+					return err
+				}
+			} else if typ == CustomTypeInterface {
+				if err := v.Interface().(Custom).Unpack(r, length, options); err != nil {
+					return err
+				}
 			} else {
 				size := length * field.Type.Resolve(options).Size()
 				if size < 8 {

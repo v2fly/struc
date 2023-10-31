@@ -83,6 +83,15 @@ func parseField(f reflect.StructField) (fd *Field, tag *strucTag, err error) {
 	if _, ok := tmp.Interface().(Custom); ok {
 		fd.Type = CustomType
 		return
+	} else {
+		if _, ok := reflect.Indirect(tmp).Interface().(Custom); ok {
+			fd.Type = CustomTypePointer
+			return
+		}
+		if tmp.Elem().Type().Implements(reflect.TypeOf((*Custom)(nil)).Elem()) {
+			fd.Type = CustomTypeInterface
+			return
+		}
 	}
 	var defTypeOk bool
 	fd.defType, defTypeOk = reflectTypeMap[fd.kind]

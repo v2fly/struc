@@ -66,6 +66,10 @@ func (f *Field) Size(val reflect.Value, options *Options) int {
 		size = length * typ.Size()
 	} else if typ == CustomType {
 		return val.Addr().Interface().(Custom).Size(options)
+	} else if typ == CustomTypePointer {
+		return reflect.Indirect(val.Addr()).Interface().(Custom).Size(options)
+	} else if typ == CustomTypeInterface {
+		return val.Interface().(Custom).Size(options)
 	} else {
 		size = typ.Size()
 	}
@@ -140,6 +144,10 @@ func (f *Field) packVal(buf []byte, val reflect.Value, length int, options *Opti
 		}
 	case CustomType:
 		return val.Addr().Interface().(Custom).Pack(buf, options)
+	case CustomTypePointer:
+		return val.Addr().Interface().(Custom).Pack(buf, options)
+	case CustomTypeInterface:
+		return val.Interface().(Custom).Pack(buf, options)
 	default:
 		panic(fmt.Sprintf("no pack handler for type: %s", typ))
 	}
