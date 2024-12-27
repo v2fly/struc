@@ -2,7 +2,7 @@ package test_pack_init
 
 import (
 	"bytes"
-	"github.com/lunixbochs/struc"
+	"github.com/v2fly/struc"
 	"sync"
 	"testing"
 )
